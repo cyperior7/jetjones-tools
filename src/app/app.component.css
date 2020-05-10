@@ -1,0 +1,49 @@
+.navbar {
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    background-color: #000000;
+    font-weight: 600;
+}
+  
+img {
+    height: 80px;
+    width: 80px;
+    margin-left: 15px;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+}
+
+nav li {
+    flex:1;
+}
+
+nav li a {
+    display: block;
+    text-align: center;
+    padding: 7px 8px;
+    text-decoration: none;
+    margin-left: 40px;
+    width: max-content;
+}
+
+.nav-text {
+    /* This value is equal to (Navbar height - Font size) / 2 */
+    margin-top: 31px;
+    color: white;
+}
+
+.nav-text:hover {
+    background-color: white;
+    color: black;
+    border-radius: 5px;
+}
