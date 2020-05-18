@@ -1,3 +1,35 @@
 <div class="container">
-    <p>division-sorter works!</p>
+    <h1>Division Sorter Tool</h1>
+
+    <form>
+        <label>Enter number of teams</label> 
+        <input type="text" id="numTeams"/>
+        <br/>
+        <br/>
+        <label>Enter number of divisions</label> 
+        <input type="text" id="numDivs"/>
+        <br/>
+        <br/>
+        <label>Would you like to name your divisions?</label>
+        <input type="checkbox" id="nameDivs"/>
+    </form>
+
+    <button (click)="submitInfo()">
+        Submit # of Teams & Divisions
+    </button>
+
+    <div *ngIf="teamInputObj">
+        <div *ngFor="let id of teamInputObj">
+            <label>Enter team #{{id}}</label>
+            <input type="text" id="{{ 'team' + id }}"/>
+        </div>
+    </div>
+
+    <button *ngIf="displayCollectButton" (click)="collectInfo()">
+        Submit Names
+    </button>
+
+    <div *ngIf="error">
+        {{error}}
+    </div>
 </div>

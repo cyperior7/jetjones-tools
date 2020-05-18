@@ -21,6 +21,7 @@ nav ul {
     padding: 0;
     overflow: hidden;
     display: flex;
+    height: 80px;
 }
 
 nav li {
@@ -30,16 +31,16 @@ nav li {
 nav li a {
     display: block;
     text-align: center;
-    padding: 7px 8px;
     text-decoration: none;
     margin-left: 40px;
     width: max-content;
 }
 
 .nav-text {
-    /* This value is equal to (Navbar height - Font size) / 2 */
-    margin-top: 31px;
+    margin-top: 21.5px; /*   This value is equal to (Navbar height - (Font size + padding) / 2   */
     color: white;
+    font-size: 20px;
+    padding: 7px 8px;
 }
 
 .nav-text:hover {
