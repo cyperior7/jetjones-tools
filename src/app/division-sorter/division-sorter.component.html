@@ -1,7 +1,7 @@
 <div class="container">
     <h1>Division Sorter Tool</h1>
 
-    <form>
+    <form *ngIf="displayInitialOptions">
         <label>Enter number of teams</label> 
         <input type="text" id="numTeams"/>
         <br/>
@@ -14,22 +14,49 @@
         <input type="checkbox" id="nameDivs"/>
     </form>
 
-    <button (click)="submitInfo()">
+    <button *ngIf="displaySubmitButton" (click)="submitInfo()">
         Submit # of Teams & Divisions
     </button>
 
-    <div *ngIf="teamInputObj">
+    <div *ngIf="displayTeamNameInputs">
         <div *ngFor="let id of teamInputObj">
             <label>Enter team #{{id}}</label>
             <input type="text" id="{{ 'team' + id }}"/>
         </div>
     </div>
 
+    <div *ngIf="displayCollectButton">
+        <br />
+        <div *ngFor="let id of divInputObj">
+            <label>Enter division #{{id}}</label>
+            <input type="text" id="{{ 'div' + id }}"/>
+        </div>
+    </div>
+
     <button *ngIf="displayCollectButton" (click)="collectInfo()">
-        Submit Names
+        Generate Divisions
     </button>
 
-    <div *ngIf="error">
-        {{error}}
+    <div *ngIf="displayResults">
+        Hello?
+        <div class="row">
+            {{firstRowResults}}
+            <div *ngFor="firstRowResults" class="col-md-3">
+                Hey
+            </div>
+        </div>
+        <div *ngIf="secondRowNeeded" class="row">
+            <div *ngFor="secondRowResults" class="col-md-3">
+                There
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="displayError">
+        <ul *ngFor="let error of errorObj">
+            <li>
+                {{error}}
+            </li>
+        </ul>
     </div>
 </div>
