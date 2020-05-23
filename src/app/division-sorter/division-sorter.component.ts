@@ -20,11 +20,14 @@ export class DivisionSorterComponent implements OnInit {
   displayInitialOptions;
   displayTeamNameInputs;
   displayDivNameInputs;
+  displayFinalButtons;
   teamNames;
   divNames;
   secondRowNeeded;
   firstRowResults;
   secondRowResults;
+  row1Class;
+  row2Class;
 
   constructor() { 
     this.errorObj = [];
@@ -90,33 +93,38 @@ export class DivisionSorterComponent implements OnInit {
 
   collectInfo(): void {
     this.resetError();
-    //TODO: Make these objects (dictionairies) instead and check for uniqueness so no one repeats a name
-    this.teamNames = [];
-    this.divNames = [];
+    this.teamNames = {};
+    this.divNames = {};
 
     for (var i = 1; i < this.teamInputObj.length + 1; i++) {
       var teamName = (<HTMLInputElement>document.getElementById("team" + i)).value;
-      if (teamName.length > 25) {
+      if (this.teamNames[teamName] !== undefined) {
+        this.displayError = true;
+        this.errorObj.push("Team " + i + " is a duplicate name.");
+      } else if (teamName.length > 25) {
         this.displayError = true;
         this.errorObj.push("Team " + i + " has too long of a name, please keep it under 25 characters.");
       } else if (teamName.length <= 0) {
         this.displayError = true;
         this.errorObj.push("Team " + i + " has an empty name.");
       } else {
-        this.teamNames.push(teamName);
+        this.teamNames[teamName] = 1;
       }
     }
 
     for (var i = 1; i < this.divInputObj.length + 1; i++) {
       var divName = (<HTMLInputElement>document.getElementById("div" + i)).value;
-      if (divName.length > 25) {
+      if (this.divNames[divName] !== undefined) {
+        this.displayError = true;
+        this.errorObj.push("Division " + i + " is a duplicate name.");
+      } else if (divName.length > 25) {
         this.displayError = true;
         this.errorObj.push("Division " + i + " has too long of a name, please keep it under 25 characters.");
       } else if (divName.length <= 0) {
         this.displayError = true;
         this.errorObj.push("Division " + i + " has an empty name.");
       } else {
-        this.divNames.push(divName);
+        this.divNames[divName] = 1;
       }
     }
 
@@ -138,15 +146,119 @@ export class DivisionSorterComponent implements OnInit {
     this.displaySubmitButton = false;
     this.secondRowNeeded = false;
 
-    this.firstRowResults = [1,2,3];
+    this.firstRowResults = [];
+    var hat = [];
+    var divNames = [];
+    var teamsPerDiv = this.numTeams / this.numDivs;
+    
+    for (var team in this.teamNames) {
+      hat.push(team);
+    }
+    this.shuffleArray(hat);
 
-    if (this.numDivs > 4) {
-      this.secondRowNeeded = true;
-      this.secondRowResults = [];
+    if (this.nameDivs) {
+      for (var div in this.divNames) {
+        divNames.push(div);
+      }
+    } else {
+      for (var i = 0; i < this.numDivs; i++) {
+        divNames.push("Division " + (i+1));
+      }
     }
 
+    this.determineColClass(1);
+
+    var firstPass = (divNames.length > 4) ? 4 : divNames.length;
+
+    for (var i = 0; i < firstPass; i++) {
+      var divPicked = divNames[i];
+      this.firstRowResults.push({divName: divPicked});
+      var teamsPicked = [];
+      for (var j = 0; j < teamsPerDiv; j++) {
+        teamsPicked.push(hat.pop());
+      }
+      this.firstRowResults[i]["teams"] = teamsPicked;
+    }
+
+    console.log(this.firstRowResults);
+
+    if (this.numDivs > 4) {
+      this.determineColClass(2);
+      this.secondRowNeeded = true;
+      this.secondRowResults = [];
+
+      // will start at 4 if in this conditional
+      for (var i = 4; i < this.numDivs; i++) {
+        var divPicked = divNames[i];
+        this.secondRowResults.push({divName: divPicked});
+        var teamsPicked = [];
+        for (var j = 0; j < teamsPerDiv; j++) {
+          teamsPicked.push(hat.pop());
+        }
+        // need to offset the starting 4 value
+        this.secondRowResults[i - 4]["teams"] = teamsPicked;
+      }
+    }
 
     this.displayResults = true;
+    this.displayFinalButtons = true;
+  }
+
+  reroll(): void {
+    this.generateDivisions();
+  }
+
+  redo(): void {
+    this.displayResults = false;
+    this.displayFinalButtons = false;
+    this.displayInitialOptions = true;
+    this.displaySubmitButton = true;
+  }
+
+  shuffleArray(array): void {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+  }
+
+  determineColClass(num): void {
+    var numDivs;
+    if (num === 1) {
+      numDivs = (this.numDivs > 4) ? 4 : this.numDivs;
+      switch (numDivs) {
+        case 1: 
+          this.row1Class = "col-md-12"
+          break;
+        case 2:
+          this.row1Class = "col-md-6"
+          break;
+        case 3:
+          this.row1Class = "col-md-4"
+          break;
+        case 4:
+          this.row1Class = "col-md-3"
+          break;
+      }
+    } else {
+      numDivs = this.numDivs - 4;
+      switch (numDivs) {
+        case 1: 
+          this.row2Class = "col-md-12"
+          break;
+        case 2:
+          this.row2Class = "col-md-6"
+          break;
+        case 3:
+          this.row2Class = "col-md-4"
+          break;
+        case 4:
+          this.row2Class = "col-md-3"
+          break;
+      }
+    }
   }
 
 }

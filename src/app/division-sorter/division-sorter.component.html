@@ -38,18 +38,35 @@
     </button>
 
     <div *ngIf="displayResults">
-        Hello?
         <div class="row">
-            {{firstRowResults}}
-            <div *ngFor="firstRowResults" class="col-md-3">
-                Hey
+            <div *ngFor="let res of firstRowResults" class="{{row1Class}}">
+                {{res.divName}}
+                <ul *ngFor="let team of res.teams">
+                    <li>
+                        {{team}}
+                    </li>
+                </ul>
             </div>
         </div>
         <div *ngIf="secondRowNeeded" class="row">
-            <div *ngFor="secondRowResults" class="col-md-3">
-                There
+            <div *ngFor="let res of secondRowResults" class="{{row2Class}}">
+                {{res.divName}}
+                <ul *ngFor="let team of res.teams">
+                    <li>
+                        {{team}}
+                    </li>
+                </ul>
             </div>
         </div>
+    </div>
+
+    <div *ngIf="displayFinalButtons">
+        <button (click)="reroll()">
+            Reroll Teams
+        </button>
+        <button (click)="redo()">
+            Resubmit League Info
+        </button>
     </div>
 
     <div *ngIf="displayError">
