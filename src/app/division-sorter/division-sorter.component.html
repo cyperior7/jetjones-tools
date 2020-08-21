@@ -1,73 +1,104 @@
 <div class="container">
     <h1>Division Sorter Tool</h1>
 
-    <form *ngIf="displayInitialOptions">
-        <label>Enter number of teams</label> 
-        <input type="text" id="numTeams"/>
-        <br/>
-        <br/>
-        <label>Enter number of divisions</label> 
-        <input type="text" id="numDivs"/>
-        <br/>
-        <br/>
-        <label>Would you like to name your divisions?</label>
-        <input type="checkbox" id="nameDivs"/>
-    </form>
+    <div *ngIf="displayInitialOptions">
+        <form>
+            <label>Enter number of teams</label> 
+            <input type="text" id="numTeams"/>
+            <br/>
+            <br/>
+            <label>Enter number of divisions</label> 
+            <input type="text" id="numDivs"/>
+            <br/>
+            <br/>
+            <label>Would you like to name your divisions?</label>
+            <input type="checkbox" id="nameDivs"/>
+        </form>
 
-    <button *ngIf="displaySubmitButton" (click)="submitInfo()">
-        Submit # of Teams & Divisions
-    </button>
-
-    <div *ngIf="displayTeamNameInputs">
-        <div *ngFor="let id of teamInputObj">
-            <label>Enter team #{{id}}</label>
-            <input type="text" id="{{ 'team' + id }}"/>
-        </div>
-    </div>
-
-    <div *ngIf="displayCollectButton">
-        <br />
-        <div *ngFor="let id of divInputObj">
-            <label>Enter division #{{id}}</label>
-            <input type="text" id="{{ 'div' + id }}"/>
-        </div>
-    </div>
-
-    <button *ngIf="displayCollectButton" (click)="collectInfo()">
-        Generate Divisions
-    </button>
-
-    <div *ngIf="displayResults">
-        <div class="row">
-            <div *ngFor="let res of firstRowResults" class="{{row1Class}}">
-                {{res.divName}}
-                <ul *ngFor="let team of res.teams">
-                    <li>
-                        {{team}}
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div *ngIf="secondRowNeeded" class="row">
-            <div *ngFor="let res of secondRowResults" class="{{row2Class}}">
-                {{res.divName}}
-                <ul *ngFor="let team of res.teams">
-                    <li>
-                        {{team}}
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <div *ngIf="displayFinalButtons">
-        <button (click)="reroll()">
-            Reroll Teams
-        </button>
-        <button (click)="redo()">
-            Resubmit League Info
+        <button (click)="submitInfo()">
+            Submit # of Teams & Divisions
         </button>
     </div>
+
+    <div *ngIf="displayInputBoxesAndGenerate">
+        <div>
+            <div *ngFor="let id of teamInfo.teamInputObj">
+                <label>Enter team #{{id}}</label>
+                <input type="text" id="{{ 'team' + id }}"/>
+            </div>
+        </div>
+    
+        <div>
+            <br />
+            <div *ngFor="let id of divisionInfo.divInputObj">
+                <label>Enter division #{{id}}</label>
+                <input type="text" id="{{ 'div' + id }}"/>
+            </div>
+        </div>
+    
+        <button (click)="collectInfo()">
+            Generate Divisions
+        </button>
+    </div>
+
+    <div *ngIf="displayResultsAndFinalButtons">
+        <div *ngFor="let bucketRow of bucket" class="row">
+                <div *ngFor="let result of bucketRow" class="col-md-4">
+                        {{ result.divName }}
+                    <ul *ngFor="let team of result.teams">
+                        <li>
+                            {{ team }}
+                        </li>
+                    </ul>
+                </div>
+        </div>
+
+        <div>
+            <button (click)="reroll()">
+                Reroll Teams
+            </button>
+            <button (click)="redo()">
+                Resubmit League Info
+            </button>
+        </div>
+    </div>
+
+    <!--
+    <div *ngIf="displayResultsAndFinalButtons">
+        <div>
+            <div class="row">
+                <div *ngFor="let res of firstRowResults" class="{{row1Class}}">
+                    {{res.divName}}
+                    <ul *ngFor="let team of res.teams">
+                        <li>
+                            {{team}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div *ngIf="secondRowNeeded" class="row">
+                <div *ngFor="let res of secondRowResults" class="{{row2Class}}">
+                    {{res.divName}}
+                    <ul *ngFor="let team of res.teams">
+                        <li>
+                            {{team}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    
+        <div>
+            <button (click)="reroll()">
+                Reroll Teams
+            </button>
+            <button (click)="redo()">
+                Resubmit League Info
+            </button>
+        </div>
+    </div>
+    -->
+
 
     <div *ngIf="displayError">
         <ul *ngFor="let error of errorObj">

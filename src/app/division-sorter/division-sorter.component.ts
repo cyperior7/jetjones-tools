@@ -7,22 +7,26 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./division-sorter.component.css']
 })
 export class DivisionSorterComponent implements OnInit {
-  errorObj;
-  numTeams;
-  numDivs;
-  nameDivs;
-  displayResults;
-  teamInputObj;
-  divInputObj;
-  displaySubmitButton;
-  displayCollectButton;
-  displayError;
+  // Display variables
   displayInitialOptions;
-  displayTeamNameInputs;
-  displayDivNameInputs;
-  displayFinalButtons;
-  teamNames;
-  divNames;
+  displayInputBoxesAndGenerate;
+  displayResultsAndFinalButtons;
+  displayError;
+
+  // Data variables
+  errorObj;
+  teamInfo = {
+    numTeams: 0,
+    teamNames: {},
+    teamInputObj: []
+  };
+  divisionInfo = {
+    numDivs: 0,
+    nameDivs: false,
+    divInputObj: [],
+    divNames: {}
+  }
+  bucket = [];
   secondRowNeeded;
   firstRowResults;
   secondRowResults;
@@ -31,11 +35,9 @@ export class DivisionSorterComponent implements OnInit {
 
   constructor() { 
     this.errorObj = [];
-    this.displaySubmitButton = true;
     this.displayInitialOptions = true;
-    this.displayResults = false;
-    this.displayTeamNameInputs = false;
-    this.displayCollectButton = false;
+    this.displayInputBoxesAndGenerate = false;
+    this.displayResultsAndFinalButtons = false;
     this.displayError = false;
   }
 
@@ -49,13 +51,12 @@ export class DivisionSorterComponent implements OnInit {
 
   submitInfo(): void {
     this.resetError();
-    this.displayTeamNameInputs = false;
-    this.displayCollectButton = false;
-    this.teamInputObj = [];
-    this.divInputObj = [];
-    this.numTeams = parseInt((<HTMLInputElement>document.getElementById("numTeams")).value, 10);
-    this.numDivs = parseInt((<HTMLInputElement>document.getElementById("numDivs")).value, 10);
-    this.nameDivs = (<HTMLInputElement>document.getElementById("nameDivs")).checked ? true : false;
+    this.displayInputBoxesAndGenerate = false;
+    this.teamInfo.teamInputObj = [];
+    this.divisionInfo.divInputObj = [];
+    this.teamInfo.numTeams = parseInt((<HTMLInputElement>document.getElementById("numTeams")).value, 10);
+    this.divisionInfo.numDivs = parseInt((<HTMLInputElement>document.getElementById("numDivs")).value, 10);
+    this.divisionInfo.nameDivs = (<HTMLInputElement>document.getElementById("nameDivs")).checked ? true : false;
 
     this.checkInitInput();
     if (this.errorObj.length > 0) {
@@ -63,42 +64,43 @@ export class DivisionSorterComponent implements OnInit {
       return;
     }
 
-    for (var i = 1; i < this.numTeams + 1; i++) {
-      this.teamInputObj.push(i);
+    for (var i = 1; i < this.teamInfo.numTeams + 1; i++) {
+      this.teamInfo.teamInputObj.push(i);
     }
 
-    if (this.nameDivs) {
-      for (var i = 1; i < this.numDivs + 1; i++) {
-        this.divInputObj.push(i);
+    if (this.divisionInfo.nameDivs === true) {
+      for (var i = 0; i < this.divisionInfo.numDivs ; i++) {
+        this.divisionInfo.divInputObj.push(i + 1);
       }
     }
 
-    this.displayTeamNameInputs = true;
-    this.displayCollectButton = true;
+    this.displayInputBoxesAndGenerate = true;
   }
 
   checkInitInput(): void {
-    if (!Number.isInteger(this.numTeams)) {
+    const numTeams = this.teamInfo.numTeams;
+    const numDivs = this.divisionInfo.numDivs;
+    if (!Number.isInteger(numTeams)) {
       this.errorObj.push("The number of teams entered is not an integer.");
-    } else if (!Number.isInteger(this.numDivs)) {
+    } else if (!Number.isInteger(numDivs)) {
       this.errorObj.push("The number of dvisions entered is not an integer.")
-    } else if (this.numTeams > 16 || this.numTeams < 4 || this.numTeams % 2 != 0) {
+    } else if (numTeams > 16 || numTeams < 4 || numTeams % 2 != 0) {
       this.errorObj.push("The number of teams must be even and between 4 and 16.");
-    } else if (this.numTeams % this.numDivs != 0) {
+    } else if (numTeams % numDivs != 0) {
       this.errorObj.push("The number of teams does not evenly divide into the number of divisions.");
-    } else if (this.numDivs > 8) {
+    } else if (numDivs > 8) {
       this.errorObj.push("The number of teams does not evenly divide into the number of divisions.");
     }
   }
 
   collectInfo(): void {
     this.resetError();
-    this.teamNames = {};
-    this.divNames = {};
+    this.teamInfo.teamNames = {};
+    this.divisionInfo.divNames = {};
 
-    for (var i = 1; i < this.teamInputObj.length + 1; i++) {
+    for (var i = 1; i < this.teamInfo.teamInputObj.length + 1; i++) {
       var teamName = (<HTMLInputElement>document.getElementById("team" + i)).value;
-      if (this.teamNames[teamName] !== undefined) {
+      if (this.teamInfo.teamNames[teamName] !== undefined) {
         this.displayError = true;
         this.errorObj.push("Team " + i + " is a duplicate name.");
       } else if (teamName.length > 25) {
@@ -108,13 +110,13 @@ export class DivisionSorterComponent implements OnInit {
         this.displayError = true;
         this.errorObj.push("Team " + i + " has an empty name.");
       } else {
-        this.teamNames[teamName] = 1;
+        this.teamInfo.teamNames[teamName] = 1;
       }
     }
 
-    for (var i = 1; i < this.divInputObj.length + 1; i++) {
+    for (var i = 1; i < this.divisionInfo.divInputObj.length + 1; i++) {
       var divName = (<HTMLInputElement>document.getElementById("div" + i)).value;
-      if (this.divNames[divName] !== undefined) {
+      if (this.divisionInfo.divNames[divName] !== undefined) {
         this.displayError = true;
         this.errorObj.push("Division " + i + " is a duplicate name.");
       } else if (divName.length > 25) {
@@ -124,7 +126,7 @@ export class DivisionSorterComponent implements OnInit {
         this.displayError = true;
         this.errorObj.push("Division " + i + " has an empty name.");
       } else {
-        this.divNames[divName] = 1;
+        this.divisionInfo.divNames[divName] = 1;
       }
     }
 
@@ -134,37 +136,92 @@ export class DivisionSorterComponent implements OnInit {
     }
 
     this.generateDivisions();
-
   }
 
   generateDivisions(): void {
     this.resetError();
     this.displayInitialOptions = false;
-    this.displayTeamNameInputs = false;
-    this.displayDivNameInputs = false;
-    this.displayCollectButton = false;
-    this.displaySubmitButton = false;
+    this.displayInputBoxesAndGenerate = false;
     this.secondRowNeeded = false;
 
     this.firstRowResults = [];
+    const numDivs = this.divisionInfo.numDivs;
     var hat = [];
     var divNames = [];
-    var teamsPerDiv = this.numTeams / this.numDivs;
+    var teamsPerDiv = this.teamInfo.numTeams / numDivs;
+    let results = [];
+    let curInBucket = 0;
+    this.bucket = [];
+
+    // [div1, div2, div3, div4]
+    // go i -> res length, and place in row i % 3
+    // [ [x, y, z], [a, b, c] ]
+    // [ [div1, div2, div3], [div4] ]
     
-    for (var team in this.teamNames) {
+    // create shuffled hat
+    for (var team in this.teamInfo.teamNames) {
       hat.push(team);
     }
     this.shuffleArray(hat);
 
-    if (this.nameDivs) {
-      for (var div in this.divNames) {
+    // create list of division names
+    if (this.divisionInfo.nameDivs) {
+      for (var div in this.divisionInfo.divNames) {
         divNames.push(div);
       }
     } else {
-      for (var i = 0; i < this.numDivs; i++) {
+      for (var i = 0; i < numDivs; i++) {
         divNames.push("Division " + (i+1));
       }
     }
+
+    // sort teams into divisions
+    for (var i = 0; i < divNames.length; i++) {
+      const divPicked = divNames[i];
+      results.push({divName: divPicked});
+      let teamsPicked = [];
+      for (var j = 0; j < teamsPerDiv; j++) {
+        teamsPicked.push(hat.pop());
+      }
+      results[i]["teams"] = teamsPicked;
+    }
+
+    // fill bucket with results in groups of 3 to be displayed
+    /*
+    let colVal = 0;
+    let rowVal = 0;
+    while (count < divNames.length) {
+      const resObj = results[count];
+      if (curInBucket < 3) {
+        bucket[rowVal][colVal] = resObj;
+        colVal++;
+        curInBucket++;
+        count++;
+      } else {
+        curInBucket = 0;
+        bucket.push([]);
+        rowVal++;
+        bucket[rowVal][colVal] = resObj;
+        curInBucket++;
+        colVal++;
+      }
+    } */
+    console.log(results);
+    let count = 0;
+    const numRows = Math.floor(numDivs / 3);
+    console.log(numRows);
+    for (let i = 0; i <= numRows; i++) {
+      this.bucket.push([]);
+      for (let j = 0; j < 3; j++) {
+        if (count === results.length) {
+          break;
+        }
+        const resObj = results[count];
+        this.bucket[i][j] = resObj;
+        count++;
+      }
+    }
+    console.log(this.bucket);
 
     this.determineColClass(1);
 
@@ -182,13 +239,13 @@ export class DivisionSorterComponent implements OnInit {
 
     console.log(this.firstRowResults);
 
-    if (this.numDivs > 4) {
+    if (numDivs > 4) {
       this.determineColClass(2);
       this.secondRowNeeded = true;
       this.secondRowResults = [];
 
       // will start at 4 if in this conditional
-      for (var i = 4; i < this.numDivs; i++) {
+      for (var i = 4; i < numDivs; i++) {
         var divPicked = divNames[i];
         this.secondRowResults.push({divName: divPicked});
         var teamsPicked = [];
@@ -200,8 +257,7 @@ export class DivisionSorterComponent implements OnInit {
       }
     }
 
-    this.displayResults = true;
-    this.displayFinalButtons = true;
+    this.displayResultsAndFinalButtons = true;
   }
 
   reroll(): void {
@@ -209,10 +265,8 @@ export class DivisionSorterComponent implements OnInit {
   }
 
   redo(): void {
-    this.displayResults = false;
-    this.displayFinalButtons = false;
+    this.displayResultsAndFinalButtons = false;
     this.displayInitialOptions = true;
-    this.displaySubmitButton = true;
   }
 
   shuffleArray(array): void {
@@ -227,7 +281,7 @@ export class DivisionSorterComponent implements OnInit {
   determineColClass(num): void {
     var numDivs;
     if (num === 1) {
-      numDivs = (this.numDivs > 4) ? 4 : this.numDivs;
+      numDivs = (this.divisionInfo.numDivs > 4) ? 4 : this.divisionInfo.numDivs;
       switch (numDivs) {
         case 1: 
           this.row1Class = "col-md-12"
@@ -243,7 +297,7 @@ export class DivisionSorterComponent implements OnInit {
           break;
       }
     } else {
-      numDivs = this.numDivs - 4;
+      numDivs = this.divisionInfo.numDivs - 4;
       switch (numDivs) {
         case 1: 
           this.row2Class = "col-md-12"
