@@ -2,7 +2,7 @@
 
 This app provides a suite of tools for Fantasy Football purposes.
 
-Currently, the following tools are available:
+Currently, the following tools are available:<br/>
 **Division Sorter** - a tool which allows you to sort a specified amount of teams into divisions.
 
 # Commands
