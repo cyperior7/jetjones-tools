@@ -1,0 +1,97 @@
+.divisionResult {
+    border: 4px;
+    border-style: solid;
+    border-color: navy;
+    border-radius: 5px;
+    color: navy;
+    width: 30%;
+    margin: 15px;
+    background-color: rgba(0, 0, 128, 0.1);
+    padding: 10px;
+}
+
+.divName {
+    font-weight: bold;
+    font-size: 20px;
+    text-decoration: underline;
+}
+
+.flexContainer {
+    display: flex;
+    justify-content: center;
+}
+
+input {
+    float: right;
+}
+
+#nameDivs {
+    float: none;
+    margin-left: 15px;
+}
+
+h1 {
+    font-weight: bold;
+    font-size: 40px;
+}
+
+hr {
+    background-color: black;
+    height: 1px;
+}
+
+form {
+    border: 4px;
+    border-style: solid;
+    border-color: navy;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 128, 0.1);
+    padding: 25px;
+    width: 500px;
+    margin-top: 20px;
+}
+
+button {
+    border: 4px;
+    border-style: solid;
+    border-color: black;
+    border-radius: 5px;
+    background-color: black;
+    color: white;
+    margin-top: 20px;
+    padding: 10px;
+}
+
+button:hover {
+    background-color: white;
+    color: black;
+}
+
+.inputBox {
+    margin-top: 10px;
+}
+
+.rerollBtn {
+    margin-right: 15px;
+}
+
+.redoBtn {
+    margin-left: 15px;
+}
+
+.errorBox {
+    border: 4px;
+    border-style: solid;
+    border-color: red;
+    border-radius: 5px;
+    background-color: rgba(255, 0, 0, 0.1);
+    color: red;
+    width: 700px;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+.errorTitle {
+    font-size: 20px;
+    font-weight: bold;
+}
