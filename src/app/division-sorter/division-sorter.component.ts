@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -28,7 +28,9 @@ export class DivisionSorterComponent implements OnInit {
     divNames: {}
   }
 
-  constructor() { 
+  constructor(
+    private cd: ChangeDetectorRef
+  ) { 
     this.errorObj = [];
     this.displayInitialOptions = true;
     this.displayInputBoxesAndGenerate = false;
@@ -65,6 +67,8 @@ export class DivisionSorterComponent implements OnInit {
     }
 
     this.displayInputBoxesAndGenerate = true;
+    this.cd.detectChanges();
+    document.getElementById("submitInfo").scrollIntoView({behavior: "smooth"});;
   }
 
   checkInitInput(): void {
@@ -89,9 +93,9 @@ export class DivisionSorterComponent implements OnInit {
   }
 
   handleError(): void {
-    const errorLocation = document.getElementById("errorLocation");
     this.displayError = true;
-    errorLocation.scrollIntoView({behavior: "smooth"});
+    this.cd.detectChanges();
+    document.getElementById("errorLocation").scrollIntoView({behavior: "smooth"});
   }
 
   collectInfo(): void {

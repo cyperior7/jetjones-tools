@@ -1,0 +1,41 @@
+.listItems {
+    list-style-type: none;
+    text-align: left;
+    margin-top: 10px;
+    padding-left: 10px;
+    font-size: 18px;
+}
+
+.individualItem {
+    display: flex;
+    align-items: center;
+}
+
+.selectedItem {
+    text-decoration: line-through;
+}
+
+.rankListContainer {
+    width: 350px;
+    border: 4px;
+    border-style: solid;
+    border-color: navy;
+    border-radius: 5px;
+    color: navy;
+    margin: 15px;
+    background-color: rgba(0, 0, 128, 0.1);
+    padding: 10px;
+}
+
+.listTitle {
+    font-weight: bold;
+    font-size: 25px;
+    text-decoration: underline;
+    margin-bottom: 5px;
+}
+
+input {
+    height: 20px;
+    width: 20px;
+    margin-right: 10px;
+}

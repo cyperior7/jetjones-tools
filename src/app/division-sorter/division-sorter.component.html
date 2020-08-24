@@ -1,8 +1,8 @@
 <div class="container">
     <h1>Division Sorter Tool</h1>
-    <hr id="errorLocation"/>
+    <hr/>
 
-    <div class="flexContainer">
+    <div class="flexContainer" id="errorLocation">
         <div *ngIf="displayError" class="errorBox">
             <span class="errorTitle">Please fix the following issues and try again.</span>
             <div *ngFor="let error of errorObj">
@@ -29,7 +29,7 @@
             </form>
         </div>
 
-        <button (click)="submitInfo()">
+        <button (click)="submitInfo()" id="submitInfo">
             Submit # of Teams & Divisions
         </button>
     </div>

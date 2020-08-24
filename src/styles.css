@@ -8,3 +8,18 @@ body {
     margin-bottom: 20px;
     text-align: center;
 }
+
+h1 {
+    font-weight: bold;
+    font-size: 40px;
+}
+
+hr {
+    background-color: black;
+    height: 1px;
+}
+
+.flexContainer {
+    display: flex;
+    justify-content: center;
+}
