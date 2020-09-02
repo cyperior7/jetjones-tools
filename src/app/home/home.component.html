@@ -1,11 +1,15 @@
 <div class="container">
     <h1>JetJones Tools</h1>
     <hr/>
-    <ul>
-        <li>Brief banner tagline</li>
-        <li>Buttons for things to do and that route</li>
-    </ul>
-    <br/>
+    <h4>Welcome to JetJones Tools! Please select a tool below.</h4>
+    <div class="flexContainer">
+        <button (click)="route('/rankings')">
+            Rankings
+        </button>
+        <button (click)="route('/divisionsorter')">
+            Division Sorter
+        </button>
+    </div>
     <br/>
     <iframe 
         width="1000" height="562"

@@ -3,7 +3,9 @@
     <ul class="listItems">
         <li *ngFor="let player of rankList; let i = index" class="individualItem">
             <input type="checkbox" [(ngModel)]="chkBox.checked" #chkBox>
-            <span [ngClass]="chkBox.checked ? 'selectedItem' : ''">{{ i + 1}}. {{ player.name }} ({{ player.position }})</span>
+            <span [ngClass]="[chkBox.checked ? 'selectedItem' : '', player.position]">
+                {{ i + 1}}. {{ player.name }} ({{ player.position }})
+            </span>
         </li>
     </ul>
 </div>

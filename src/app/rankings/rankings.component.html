@@ -4,8 +4,30 @@
 
     <div class="flexContainer">
         <rank-list
-        [rankListTitle] = "'Top 40 Overall Players'"
-        [rankList] = "top40List">
+            [rankListTitle] = "'Top 40 Overall Players'"
+            [rankList] = "top40List">
         </rank-list>
+        <div>
+            <div class="row">
+                <rank-list
+                    [rankListTitle] = "'Top 10 Quarterbacks'"
+                    [rankList] = "top10QBs">
+                </rank-list>
+                <rank-list
+                    [rankListTitle] = "'Top 10 Tight Ends'"
+                    [rankList] = "top10TEs">
+                </rank-list>
+            </div>
+            <div class="row">
+                <rank-list
+                    [rankListTitle] = "'Top 10 Defenses'"
+                    [rankList] = "top10Defs">
+                </rank-list>
+                <rank-list
+                    [rankListTitle] = "'Top 10 Kickers'"
+                    [rankList] = "top10Ks">
+                </rank-list>
+            </div>
+        </div>
     </div>
 </div>

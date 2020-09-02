@@ -1,4 +1,4 @@
-export interface IRankItem {
+export interface RankItem {
     name: string;
     position: Positions;
 }
@@ -9,5 +9,5 @@ export enum Positions {
     TightEnd = "TE",
     QuarterBack = "QB",
     Kicker = "K",
-    Defense = "D/ST"
+    Defense = "DST"
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { IRankItem } from './../../models/rank-list-model';
+import { RankItem } from './../../models/rank-list-model';
 
 @Component({
   selector: 'rank-list',
@@ -8,7 +8,7 @@ import { IRankItem } from './../../models/rank-list-model';
 })
 export class RankListComponent implements OnInit {
   @Input() rankListTitle = '';
-  @Input() rankList: IRankItem[];
+  @Input() rankList: RankItem[];
 
   constructor() { }
 

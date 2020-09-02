@@ -39,3 +39,27 @@ input {
     width: 20px;
     margin-right: 10px;
 }
+
+.RB {
+    color: green;
+}
+
+.WR {
+    color: blue;
+}
+
+.TE {
+    color: rgb(223, 146, 3);
+}
+
+.QB {
+    color: red;
+}
+
+.DST {
+    color: teal;
+}
+
+.K {
+    color: purple;
+}
