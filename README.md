@@ -4,6 +4,7 @@ This app provides a suite of tools for Fantasy Football purposes.
 
 Currently, the following tools are available:<br/>
 **Division Sorter** - a tool which allows you to sort a specified amount of teams into divisions.
+**Rankings** - a full page of rankings including a top 40 overall, and top 10 lists for QB, D/ST, K, and TE.
 
 # Commands
 
