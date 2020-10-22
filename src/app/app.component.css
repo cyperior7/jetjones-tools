@@ -48,3 +48,7 @@ nav li a {
     color: black;
     border-radius: 5px;
 }
+
+.page-content {
+    padding-top: 80px;
+}

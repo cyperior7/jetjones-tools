@@ -4,6 +4,7 @@
 
     <div class="flexContainer" id="errorLocation">
         <div *ngIf="displayError" class="errorBox">
+            <span class="fas fa-exclamation-triangle"></span>
             <span class="errorTitle">Please fix the following issues and try again.</span>
             <div *ngFor="let error of errorObj">
                 &bull;&nbsp;{{error}}
@@ -30,7 +31,8 @@
         </div>
 
         <button (click)="submitInfo()" id="submitInfo">
-            Submit # of Teams & Divisions
+            <span class="fas fa-check"></span>
+            Submit League Info
         </button>
     </div>
 
@@ -51,6 +53,7 @@
         </div>
     
         <button (click)="collectInfo()">
+            <span class="fas fa-bolt"></span>
             Generate Divisions
         </button>
     </div>
@@ -67,9 +70,11 @@
 
         <div>
             <button (click)="reroll()" class="rerollBtn">
+                <span class="fas fa-dice"></span>
                 Reroll Teams
             </button>
             <button (click)="redo()" class="redoBtn">
+                <span class="fas fa-redo-alt"></span>
                 Resubmit League Info
             </button>
         </div>

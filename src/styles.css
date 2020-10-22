@@ -23,3 +23,7 @@ hr {
     display: flex;
     justify-content: center;
 }
+
+.fas {
+    margin-right: 5px;
+}

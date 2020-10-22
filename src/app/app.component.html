@@ -1,5 +1,5 @@
 <!-- Navbar -->
-<div class="navbarBanner" role="banner">
+<div class="navbarBanner fixed-top" role="banner">
   <nav>
     <ul>
       <li>
@@ -9,6 +9,7 @@
       </li>
       <li>
         <a routerLink="/" class="nav-text">
+          <span class="fas fa-home"></span>
           Home
         </a>
       </li>
@@ -26,4 +27,6 @@
   </nav>
 </div>
 
-<router-outlet></router-outlet>
+<div class="page-content">
+  <router-outlet></router-outlet>
+</div>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Top40Rankings, Top10Quarterbacks, Top10TightEnds, Top10Defenses, Top10Kickers } from './../data/rankings-data';
+import { Top40Rankings, Top10Quarterbacks, Top10TightEnds, Top10Defenses, Top10Kickers, TopSleeperPicks } from './../data/rankings-data';
 
 @Component({
   selector: 'app-rankings',
@@ -12,6 +12,7 @@ export class RankingsComponent implements OnInit {
   top10TEs = Top10TightEnds
   top10Defs = Top10Defenses;
   top10Ks = Top10Kickers;
+  topSleepers = TopSleeperPicks;
 
   constructor() { }
 

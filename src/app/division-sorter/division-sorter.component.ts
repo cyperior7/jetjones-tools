@@ -80,11 +80,11 @@ export class DivisionSorterComponent implements OnInit {
       this.errorObj.push("The number of dvisions entered is not an integer.")
     } else if (numTeams > 16 || numTeams < 4 || numTeams % 2 != 0) {
       this.errorObj.push("The number of teams must be even and between 4 and 16.");
+    } else if (numDivs > 8 || numDivs < 2) {
+      this.errorObj.push("The number of divisions must be between 2 and 8.");
     } else if (numTeams % numDivs != 0) {
       this.errorObj.push("The number of teams does not evenly divide into the number of divisions.");
-    } else if (numDivs > 8) {
-      this.errorObj.push("The number of teams does not evenly divide into the number of divisions.");
-    }
+    } 
   }
 
   resetError(): void {
