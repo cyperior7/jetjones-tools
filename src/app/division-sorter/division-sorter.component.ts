@@ -95,7 +95,7 @@ export class DivisionSorterComponent implements OnInit {
   handleError(): void {
     this.displayError = true;
     this.cd.detectChanges();
-    document.getElementById("errorLocation").scrollIntoView({behavior: "smooth"});
+    document.getElementById("header").scrollIntoView({ behavior: "smooth"});
   }
 
   collectInfo(): void {
