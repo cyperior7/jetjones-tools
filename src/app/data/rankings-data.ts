@@ -88,5 +88,6 @@ export const Top10Kickers: RankItem[] = [
 ];
 
 export const TopSleeperPicks: RankItem[] = [
-    {name: "Josh Gordon", position: Positions.WideReceiver},
+    {name: "Marquez Callaway", position: Positions.WideReceiver},
+    {name: "Gus Edwards", position: Positions.RunningBack},
 ]
