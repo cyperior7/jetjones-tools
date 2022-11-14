@@ -10,6 +10,15 @@ Currently, the following tools are available:<br/>
 * **Weekly Stats**
     * TBD, will contain league information using Yahoo's API
 
+    Roster per week per team: `https://fantasysports.yahooapis.com/fantasy/v2/team/414.l.915675.t.1/roster/players;week=10`
+    Player per specific week: `https://fantasysports.yahooapis.com/fantasy/v2/league/414.l.915675/players;player_keys=414.p.33394/stats;type=week;week=10`
+
+| Role      | QB | Ignore|
+| ----------- | ----------- | ---|
+| X | Justin | Josh |
+| 1      | 45  (color code)     | 50 |
+| 2   | 32        | 37 |
+
 # Running
 
 ## Development
