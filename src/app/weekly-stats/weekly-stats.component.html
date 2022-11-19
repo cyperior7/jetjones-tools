@@ -1,0 +1,18 @@
+<div class="container">
+    <h1>Weekly Stats</h1>
+    <hr/>
+
+    <div class="inputBox">
+        <label>Enter yahoo code</label> 
+        <input type="text" id="yahooCode"/>
+    </div>
+    <button (click)="getYahooToken()" type="button">
+        <span class="fas fa-check"></span>
+        getYahooToken
+    </button>
+    <a href="https://api.login.yahoo.com/oauth2/request_auth?client_id=dj0yJmk9YmJSR2s1MnVWdGNxJmQ9WVdrOVdUSkdOVE5aYm5VbWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTM4&redirect_uri=oob&response_type=code&language=en-us" target="_blank">Hey</a>
+    <button (click)="getTeamData()" type="button">
+        <span class="fas fa-check"></span>
+        getTeamData
+    </button>
+</div>
