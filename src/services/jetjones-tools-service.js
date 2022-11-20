@@ -76,37 +76,10 @@ const getTeamComparisonsForWeek = async (req, res, next) => {
         yahooService.setAccessToken(access_token);
 
         const oppTeamNumber = await yahooService.getOpponentTeamNumber(leagueId, teamNumber, week);
+        const userTeamInfo = await yahooService.getTeamDetailsPerWeek(leagueId, teamNumber, week);
+        const opponentTeamInfo = await yahooService.getTeamDetailsPerWeek(leagueId, oppTeamNumber, week);
 
-        /* get each team info, sample obj:
-           {
-            qb: 45,
-            wr: 30,
-            ...
-           }
-           avg pts per position (taking into account flex)
-
-           steps:
-            - get team roster
-                - need to use array positioning to determine who is starting, or find when "is_flex" becomes true
-                - remember that one league has 2 flex's
-            - get points per player by calling their API
-            - reduce each position and make average
-        */
-        const userTeamInfo = yahooService.getTeamDetailsPerWeek(leagueId, teamNumber, week);
-        const opponentTeamInfo = yahooService.getTeamDetailsPerWeek(leagueId, oppTeamNumber, week);
-
-        /* compare both teams, and prepare final obj:
-           {
-            qb: opp,
-            wr: user,
-            rb: opp,
-            ...
-           }
-
-           should I keep the numbers there? PROBABLY. but can still make the >/< comparison in back end
-        */
         const result = yahooService.compareTeams(userTeamInfo, opponentTeamInfo);
-
         res.status(200).json(result);
     } catch (e) {
         next(e)

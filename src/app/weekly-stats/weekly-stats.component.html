@@ -1,18 +1,102 @@
 <div class="container">
-    <h1>Weekly Stats</h1>
+    <h1 id="header">Weekly Stats</h1>
     <hr/>
 
-    <div class="inputBox">
-        <label>Enter yahoo code</label> 
-        <input type="text" id="yahooCode"/>
+    <div *ngIf="displayError" class="flexContainer" style="margin-bottom: 20px;">
+        <div class="errorBox">
+            <span class="fas fa-exclamation-triangle"></span>
+            <span class="errorTitle">Please fix the following issues and try again.</span>
+            <div *ngFor="let error of errorObj">
+                &bull;&nbsp;{{error}}
+            </div>
+        </div>
+        <br/>
     </div>
-    <button (click)="getYahooToken()" type="button">
+
+    <div class="flexContainer">
+        <div class="yahooSection">
+            <div class="formSection">
+                <span class="boxTitle">Yahoo Auth Token</span>
+                <hr style="width: 400px;"/>
+            </div>
+            <form style="margin: 10px;">
+                <div class="formSection">
+                    <a href="https://api.login.yahoo.com/oauth2/request_auth?client_id=dj0yJmk9YmJSR2s1MnVWdGNxJmQ9WVdrOVdUSkdOVE5aYm5VbWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTM4&redirect_uri=oob&response_type=code&language=en-us"
+                        target="_blank">
+                        Generate Yahoo Code
+                    </a>
+                </div>
+                <div class="formSection">
+                    <label style="padding-right: 5px;">Enter Yahoo Code</label> 
+                    <input type="text" id="yahooCode"/>
+                </div>
+                <div class="formSection">
+                    <button (click)="getYahooToken()" type="button">
+                        <span class="fas fa-bolt"></span>
+                        Generate Yahoo Token
+                    </button>
+                    <div *ngIf="yahooAuthTokenSet" class="authStatus authSet">
+                        <span class="fas fa-check"></span>
+                        Auth Token Set
+                    </div>
+                    <div *ngIf="!yahooAuthTokenSet" class="authStatus authNotSet">
+                        <span class="fas fa-times"></span>
+                        Auth Token Not Set
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <br/>
+
+    <div class="flexContainer">
+        <div class="querySettingsSection">
+            <div class="formSection">
+                <span class="boxTitle">Query Settings</span>
+                <hr style="width: 400px;"/>
+            </div>
+            <form style="margin: 10px;">
+                <div class="formSection">
+                    <b>Select League </b>
+                    <input type="radio" id="WorldyEgwugwus" name="leagueId" value="WorldyEgwugwus" [(ngModel)]="leagueName" class="choiceMargin">
+                    <label for="WorldyEgwugwus" class="choiceLabel">Worldy Egwugwus</label>
+                    <input type="radio" id="KappaLord" name="leagueId" value="KappaLord" [(ngModel)]="leagueName" class="choiceMargin">
+                    <label for="KappaLord" class="choiceLabel">Kappa Lord</label>
+                    <input type="radio" id="YellowGang" name="leagueId" value="YellowGang" [(ngModel)]="leagueName" class="choiceMargin">
+                    <label for="YellowGang" class="choiceLabel">Yellow Gang</label>
+                    <input type="radio" id="Cyperior" name="leagueId" value="Cyperior" [(ngModel)]="leagueName" class="choiceMargin">
+                    <label for="Cyperior" class="choiceLabel">Cyperior</label>
+                    <input type="radio" id="custom" name="leagueId" value="customLeague" [(ngModel)]="leagueName" class="choiceMargin">
+                    <input type="text" id="customLeagueId" placeholder="Other League Id" style="width: 125px; margin-left: 5px;"/>
+                </div>
+                <div *ngIf="leagueName === 'customLeague'">
+                    <div class="formSection">
+                        <span class="fas fa-info-circle"></span>
+                        <b>League Home Page: </b>https://football.fantasysports.yahoo.com/f1/<span style="background-color: yellow;">915675</span>?pspid=782200906&activity=league
+                    </div>
+                    <div class="formSection">
+                        <b>Enter Team Number </b>
+                        <input type="text" id="customTeamNumber" class="choiceMargin" [(ngModel)]="teamNumber"/>
+                    </div>
+                    <div class="formSection">
+                        <span class="fas fa-info-circle"></span>
+                        <b>My Team Page: </b>https://football.fantasysports.yahoo.com/f1/915675/<span style="background-color: yellow;">1</span>?pspid=782200945&activity=myteam
+                    </div>
+                </div>
+                <div class="formSection">
+                    <b>Select Week Number </b>
+                    <input type="radio" id="customWeek" name="weekNumber" value="customWeek" [(ngModel)]="weekSelection" class="choiceMargin">
+                    <input type="text" id="customWeekNumber" placeholder="Week Number" style="width: 110px; margin-left: 5px;"/>
+                    <input type="radio" id="AllWeeks" name="weekNumber" value="AllWeeks" [(ngModel)]="weekSelection" class="choiceMargin">
+                    <label for="AllWeeks" class="choiceLabel">All Weeks</label>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <button (click)="getWeekResults()" id="submitQuery" type="button" class="submitButton">
         <span class="fas fa-check"></span>
-        getYahooToken
-    </button>
-    <a href="https://api.login.yahoo.com/oauth2/request_auth?client_id=dj0yJmk9YmJSR2s1MnVWdGNxJmQ9WVdrOVdUSkdOVE5aYm5VbWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTM4&redirect_uri=oob&response_type=code&language=en-us" target="_blank">Hey</a>
-    <button (click)="getTeamData()" type="button">
-        <span class="fas fa-check"></span>
-        getTeamData
+        Submit Query
     </button>
 </div>

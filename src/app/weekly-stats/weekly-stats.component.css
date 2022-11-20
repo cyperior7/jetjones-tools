@@ -1,0 +1,83 @@
+.yahooSection {
+    border: 4px;
+    border-style: solid;
+    border-color: rgb(153, 0, 255);
+    border-radius: 5px;
+    background-color: rgba(153, 0, 255, 0.1);
+    width: 500px;
+}
+
+.querySettingsSection {
+    border: 4px;
+    border-style: solid;
+    border-color: navy;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 128, 0.1);
+    width: 825px;
+}
+
+.formSection {
+    margin-top: 10px;
+}
+
+.authStatus {
+    display: inline-block;
+    padding-left: 30px;
+}
+
+.authNotSet {
+    color: red;
+}
+
+.authSet {
+    color: green
+}
+
+.boxTitle {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.choiceMargin {
+    margin-left: 10px;
+}
+
+.choiceLabel {
+    padding-left: 5px;
+}
+
+button {
+    border: 4px;
+    border-style: solid;
+    border-color: black;
+    border-radius: 5px;
+    background-color: black;
+    color: white;
+}
+
+button:hover {
+    background-color: white;
+    color: black;
+}
+
+.submitButton {
+    margin-top: 20px;
+    padding: 10px;
+}
+
+.errorBox {
+    border: 4px;
+    border-style: solid;
+    border-color: red;
+    border-radius: 5px;
+    background-color: rgba(255, 0, 0, 0.1);
+    color: red;
+    width: 700px;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+.errorTitle {
+    font-size: 20px;
+    font-weight: bold;
+}

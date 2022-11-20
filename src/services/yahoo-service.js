@@ -26,11 +26,10 @@ const getOpponentTeamNumber = async (leagueId, teamNumber, week) => {
         method: 'get',
         headers: { Authorization: `Bearer ${getAccessToken()}` }
     }
-
     const result = await axios(options);
     const resultJson = JSON.parse(convert.xml2json(result.data, {compact: true, spaces: 4}));
-    const allMatchups = resultJson['fantasy_content']['league']['scoreboard']['matchups']['matchup'];
 
+    const allMatchups = resultJson['fantasy_content']['league']['scoreboard']['matchups']['matchup'];
     for (const matchup of allMatchups) {
         const teams = matchup['teams']['team'];
         const teamId1 = teams[0]['team_id']['_text'];
@@ -43,52 +42,108 @@ const getOpponentTeamNumber = async (leagueId, teamNumber, week) => {
 }
 
 const getTeamDetailsPerWeek = async (leagueId, teamNumber, week) => {
-
-
-
-
-    try {
-        const access_token = req.query.access_token;
-
-        if (!access_token) {
-            throw new Error('No Yahoo access code is set');
-        }
-
-        const week = req.query.week;
-        const leagueId = req.query.leagueId;
-        const teamDetails = {}
-
-        const options = {
-            url: `https://fantasysports.yahooapis.com/fantasy/v2/team/414.l.915675.t.1/roster;week=10/players`,
-            method: 'get',
-            headers: { Authorization: `Bearer ${access_token}` }
-        }
-    
-        const result = await axios(options);
-        const resultJson = JSON.parse(convert.xml2json(result.data, {compact: true, spaces: 4}));
-        const players = resultJson['fantasy_content']['team']['roster']['players']['player'];
-        console.log(players);
-        for (const player of players) {
-            if (player['player_key']) {
-                console.log(player['name']);
-            }
-        }
-        //console.log(resultJson['fantasy_content']);
-
-        // make Team API call
-
-        // for each player, make player API call
-
-        // build JSON result
-
-        res.status(200).json({ x: 3 });
-    } catch (e) {
-        next(e)
+    const url = `https://fantasysports.yahooapis.com/fantasy/v2/team/${NFL_ID}.${leagueId}.t.${teamNumber}/roster;week=${week}/players`;
+    const options = {
+        url,
+        method: 'get',
+        headers: { Authorization: `Bearer ${getAccessToken()}` }
     }
+    const result = await axios(options);
+    const resultJson = JSON.parse(convert.xml2json(result.data, {compact: true, spaces: 4}));
+
+    const players = resultJson['fantasy_content']['team']['roster']['players']['player'];
+    const positionAverages = await calculatePositionAverages(players, leagueId);
+    return positionAverages;
+}
+
+const calculatePositionAverages = async (playerList, leagueId) => {
+    const positionAverages = {
+        QB: {
+            score: 0,
+            count: 0
+        },
+        WR: {
+            score: 0,
+            count: 0
+        },
+        RB: {
+            score: 0,
+            count: 0
+        },
+        TE: {
+            score: 0,
+            count: 0
+        },
+        K: {
+            score: 0,
+            count: 0
+        },
+        DEF: {
+            score: 0,
+            count: 0
+        },
+        'DEF+K': {
+            score: 0,
+        }
+    };
+
+    for (const player of playerList) {
+        const startingStatus = player['selected_position']['position']['_text'];
+        if (startingStatus === 'BN' || startingStatus === 'IR') {
+            continue; // skip bench and IR players
+        }
+        const position = player['primary_position']['_text'];
+        const week = player['selected_position']['week']['_text'];
+        const playerScore = await getPlayerScorePerWeek(leagueId, player['player_key']['_text'], week);
+        positionAverages[position].score += playerScore;
+        positionAverages[position].count += 1;
+    }
+
+    for (const position in positionAverages) {
+        positionAverages[position] = positionAverages[position].score / positionAverages[position].count;
+    }
+
+    positionAverages['DEF+K'] = positionAverages['K'] + positionAverages['DEF'];
+
+    return positionAverages;
+}
+
+const getPlayerScorePerWeek = async (leagueId, playerId, week) => {
+    const url = `https://fantasysports.yahooapis.com/fantasy/v2/league/${NFL_ID}.${leagueId}/players;player_keys=${playerId}/stats;type=week;week=${week}`;
+    const options = {
+        url,
+        method: 'get',
+        headers: { Authorization: `Bearer ${getAccessToken()}` }
+    }
+    const result = await axios(options);
+    const resultJson = JSON.parse(convert.xml2json(result.data, {compact: true, spaces: 4}));
+
+    const playerScore = parseFloat(resultJson['fantasy_content']['league']['players']['player']['player_points']['total']['_text']);
+    return playerScore;
 }
 
 const compareTeams = (userTeam, oppTeam) => {
+    const OPP = 'opponent';
+    const USER = 'user';
+    const TIE = 'tie';
+    const result = {};
 
+    for (const position in userTeam) {
+        const userValue = userTeam[position];
+        const oppValue = oppTeam[position];
+        const winner = userValue > oppValue
+            ? USER
+            : oppValue > userValue
+                ? OPP
+                : TIE;
+        result[position] = {
+            winner,
+            userScore: (userValue).toFixed(2),
+            oppScore: (oppValue).toFixed(2)
+        };
+    }
+    
+    return result;
 }
 
 module.exports = {
