@@ -1,42 +1,52 @@
-const qs = require('qs');
 const axios = require('axios');
-const parseString = require('xml2js').parseString;
-const util = require('node:util');
+const convert = require('xml-js');
 
-const CLIENT_SECRET = 'CHANGE ME';
+// This is required after the Yahoo resource
+const NFL_ID = 'nfl.l';
 
-const getAuthToken = async (req, res, next) => {
-    try {
-        const code = req.params.code;
 
-        if (!code) {
-            throw new Error('No Yahoo code sent');
-        }
-
-        const options = {
-            url: `https://api.login.yahoo.com/oauth2/get_token`,
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            data: qs.stringify({
-                client_id: 'dj0yJmk9YmJSR2s1MnVWdGNxJmQ9WVdrOVdUSkdOVE5aYm5VbWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTM4',
-                client_secret: 'CLIENT_SECRET',
-                redirect_uri: 'oob',
-                code,
-                grant_type: 'authorization_code'
-            })
-        }
-    
-        const result = await axios(options);
-        const access_token = result.data.access_token;
-        res.status(200).json({ access_token });
-    } catch (e) {
-        next(e)
-    }
+const ACCESS_TOKEN_HOLDER = { access_token: 'placeholder' };
+const getAccessToken = () => {
+    return ACCESS_TOKEN_HOLDER.access_token;
+}
+const setAccessToken = access_token => {
+    ACCESS_TOKEN_HOLDER.access_token = access_token;
 }
 
-const getTeamDetailsPerWeek = async (req, res, next) => {
+/**
+ * @param {*} leagueId 
+ * @param {*} teamNumber 
+ * @param {*} week 
+ * @returns the opponent's team number on the given week
+ */
+const getOpponentTeamNumber = async (leagueId, teamNumber, week) => {
+    const url = `https://fantasysports.yahooapis.com/fantasy/v2/league/${NFL_ID}.${leagueId}/scoreboard?week=${week}`
+    const options = {
+        url,
+        method: 'get',
+        headers: { Authorization: `Bearer ${getAccessToken()}` }
+    }
+
+    const result = await axios(options);
+    const resultJson = JSON.parse(convert.xml2json(result.data, {compact: true, spaces: 4}));
+    const allMatchups = resultJson['fantasy_content']['league']['scoreboard']['matchups']['matchup'];
+
+    for (const matchup of allMatchups) {
+        const teams = matchup['teams']['team'];
+        const teamId1 = teams[0]['team_id']['_text'];
+        const teamId2 = teams[1]['team_id']['_text'];
+        if (teamId1 === teamNumber) return teamId2;
+        if (teamId2 === teamNumber) return teamId1;
+    }
+    
+    throw new Error(`Please make sure requested team number ${teamNumber} is valid`);
+}
+
+const getTeamDetailsPerWeek = async (leagueId, teamNumber, week) => {
+
+
+
+
     try {
         const access_token = req.query.access_token;
 
@@ -49,17 +59,21 @@ const getTeamDetailsPerWeek = async (req, res, next) => {
         const teamDetails = {}
 
         const options = {
-            url: `https://fantasysports.yahooapis.com/fantasy/v2/team/414.l.915675.t.1/roster/players;week=10`,
+            url: `https://fantasysports.yahooapis.com/fantasy/v2/team/414.l.915675.t.1/roster;week=10/players`,
             method: 'get',
             headers: { Authorization: `Bearer ${access_token}` }
         }
     
         const result = await axios(options);
-        const teamJson = parseString(result.data, function (err, result) {
-            console.dir(result);
-        });
-        const newJson = util.inspect(JSON.stringify(teamJson), false, null)
-        console.log(newJson.fantasy_content);
+        const resultJson = JSON.parse(convert.xml2json(result.data, {compact: true, spaces: 4}));
+        const players = resultJson['fantasy_content']['team']['roster']['players']['player'];
+        console.log(players);
+        for (const player of players) {
+            if (player['player_key']) {
+                console.log(player['name']);
+            }
+        }
+        //console.log(resultJson['fantasy_content']);
 
         // make Team API call
 
@@ -73,7 +87,13 @@ const getTeamDetailsPerWeek = async (req, res, next) => {
     }
 }
 
+const compareTeams = (userTeam, oppTeam) => {
+
+}
+
 module.exports = {
-    getAuthToken,
-    getTeamDetailsPerWeek
+    setAccessToken,
+    getOpponentTeamNumber,
+    getTeamDetailsPerWeek,
+    compareTeams,
 };
