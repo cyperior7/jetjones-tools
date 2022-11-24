@@ -20,7 +20,8 @@ const POSITIONS = {
     TE: 'TE',
     K: 'K',
     DEF: 'DEF',
-    'DEF+K': 'DEF+K'
+    'DEF+K': 'DEF+K',
+    FLEX: 'W/R/T',
 };
 
 const OPP = 'opponent';
@@ -109,14 +110,16 @@ const getTeamDetailsPerWeek = async (leagueId, teamNumber, week) => {
 
 const calculatePositionAverages = async (playerList, leagueId, week) => {
     const positionAverages = {};
+    const selectedPositionMapping = {};
 
     let playerKeyList = '';
     for (const player of playerList) {
-        const startingStatus = player['selected_position']['position']['_text'];
-        if (startingStatus === 'BN' || startingStatus === 'IR') {
+        const selectedPosition = player['selected_position']['position']['_text'];
+        if (selectedPosition === 'BN' || selectedPosition === 'IR') {
             continue; // skip bench and IR players
         }
-        playerKeyList += `${player['player_key']['_text']},`
+        playerKeyList += `${player['player_key']['_text']},`;
+        selectedPositionMapping[player['player_key']['_text']] = selectedPosition;
     }
     if (playerKeyList.charAt(playerKeyList.length - 1) === ',') {
         // Remove last comma
@@ -126,7 +129,10 @@ const calculatePositionAverages = async (playerList, leagueId, week) => {
     const playerListWithScores = await getPlayersAndScores(leagueId, playerKeyList, week);
 
     for (const player of playerListWithScores) {
-        const position = player['primary_position']['_text'];
+        // If the player is FLEX, use the primary position. If not, use the selected position. If someone like Taysom Hill is FLEX'd, can't do much.
+        const position = selectedPositionMapping[player['player_key']['_text']] === POSITIONS.FLEX
+            ? player['primary_position']['_text']
+            : selectedPositionMapping[player['player_key']['_text']];
         const playerScore = parseFloat(player['player_points']['total']['_text']);
         if (positionAverages[position]) {
             positionAverages[position].score += playerScore;
