@@ -15,13 +15,8 @@ export class AppService {
     return(this.http.get(`${LOCAL_HOST}/getAuthToken/${code}`));
   }
 
-  getTeamComparisonPerWeek(leagueId, teamNumber, week) {
-    const url = `${LOCAL_HOST}/getTeamComparisonForWeek?access_token=${this.getConfig('access_token')}&leagueId=${leagueId}&teamNumber=${teamNumber}&week=${week}`;
-    return(this.http.get(url));
-  }
-
-  getTeamComparisonAllWeeks(leagueId, teamNumber) {
-    const url = `${LOCAL_HOST}/getTeamComparisonAllWeeks?access_token=${this.getConfig('access_token')}&leagueId=${leagueId}&teamNumber=${teamNumber}`;
+  getTeamComparisons(leagueId, teamNumber, week) {
+    const url = `${LOCAL_HOST}/getTeamComparisons?access_token=${this.getConfig('access_token')}&leagueId=${leagueId}&teamNumber=${teamNumber}&week=${week}`;
     return(this.http.get(url));
   }
 

@@ -11,24 +11,26 @@ Currently, the following tools are available:<br/>
 * **Rankings** 
     * Full page of rankings including a top 40 overall, and top 10 lists for QB, D/ST, K, and TE.
 * **Weekly Stats**
-    * TBD, will contain league information using Yahoo's API
+    * A tool to calculate a position by position comparison between the user's and opponent's team on a per week basis (all weeks can be requested too).
 
-    Roster per week per team: `https://fantasysports.yahooapis.com/fantasy/v2/team/414.l.915675.t.1/roster/players;week=10`
-    Player per specific week: `https://fantasysports.yahooapis.com/fantasy/v2/league/414.l.915675/players;player_keys=414.p.33394/stats;type=week;week=10`
+# Setup
 
-| Role      | QB | Ignore|
-| ----------- | ----------- | ---|
-| X | Justin | Josh |
-| 1      | 45  (color code)     | 50 |
-| 2   | 32        | 37 |
+## Weekly Stats
+* The Weekly stats page can only be run locally.
+* Create a `.env` file and copy the contents from `env.example`. The Client ID and Client Secret need to be populated.
+* Update `league-data.ts` file. It assumes I am in 4 leagues. The 4 radio buttons are hard-coded in as of right now. Update the `leagueId` and `teamNumber` per league.
 
 # Running
 
-## Development
+## Local
 
-* Run the server
+* Run the angular application
 ```
 ng serve
+```
+* Run the NodeJs server (separate terminal)
+```
+node server.js
 ```
 * Navigate to the local URL
 ```

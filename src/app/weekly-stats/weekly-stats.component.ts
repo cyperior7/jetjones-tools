@@ -1,5 +1,4 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { resourceLimits } from 'worker_threads';
 import { AppService } from '../app.service';
 import { leagueInformation } from '../data/league-data';
 
@@ -75,17 +74,10 @@ export class WeeklyStatsComponent implements OnInit {
 
     this.isLoading = true;
 
-    if (this.weekNumber === this.ALL_WEEKS) {
-      this.appService.getTeamComparisonAllWeeks(this.leagueId, this.teamNumber).subscribe(response => {
-        console.log(response['data']);
-        this.handleResponse(response);
-      });
-    } else {
-      this.appService.getTeamComparisonPerWeek(this.leagueId, this.teamNumber, this.weekNumber).subscribe(response => {
-        console.log(response['data']);
-        this.handleResponse(response);
-      });
-    }
+    this.appService.getTeamComparisons(this.leagueId, this.teamNumber, this.weekNumber).subscribe(response => {
+      console.log(response['data']);
+      this.handleResponse(response);
+    });
   }
 
   setQueryInputs(): void {

@@ -61,8 +61,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "jetjones-tools:build",
-            "proxyConfig": "proxy.config.json"
+            "browserTarget": "jetjones-tools:build"
           },
           "configurations": {
             "production": {

@@ -6,14 +6,6 @@ const yahooService = require('./yahoo-service');
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET; 
 
-/*  APIs
-    - Get auth token
-    - Get team comparison
-        - [League ID, Team Number, Week]
-    - Get team comparison for all weeks
-        [League ID, Team Number]
-*/
-
 /**
  * Gets the auth token from Yahoo using a client id, client secret, and yahoo code
  * Path parameters:
@@ -52,15 +44,15 @@ const CLIENT_SECRET = process.env.CLIENT_SECRET;
 }
 
 /**
- * Returns a JSON positional comparison between two teams on a given week
+ * Returns an array of positional comparisons between two teams on a given week
  * Query parameters:
  * @param access_token - access token generated from "getAuthToken"
  * @param teamNumber - user's team number
  * @param leagueId - the league id
- * @param week - the target week
+ * @param week - the target week - could be "allWeeks"
  */
-const getTeamComparisonsForWeek = async (req, res, next) => {
-    console.log(`[${new Date()}] Request to /getTeamComparisonsForWeek`);
+const getTeamComparisons = async (req, res, next) => {
+    console.log(`[${new Date()}] Request to /getTeamComparisons`);
     try {
         const access_token = req.query.access_token;
         const teamNumber =  req.query.teamNumber;
@@ -75,58 +67,20 @@ const getTeamComparisonsForWeek = async (req, res, next) => {
 
         yahooService.setAccessToken(access_token);
 
-        const { weekWinner, oppTeamNumber } = await yahooService.getOpponentTeamNumberAndWeekWinner(leagueId, teamNumber, week);
-        const userTeamInfo = await yahooService.getTeamDetailsPerWeek(leagueId, teamNumber, week);
-        const opponentTeamInfo = await yahooService.getTeamDetailsPerWeek(leagueId, oppTeamNumber, week);
-        const result = yahooService.compareTeams(userTeamInfo, opponentTeamInfo);
-        result.unshift(weekWinner);
-
-        res.status(200).json({
-            data: [result]
-        });
-    } catch (e) {
-        next(e)
-    }
-}
-
-/**
- * Returns a JSON positional comparison between two teams for all weeks
- * Query parameters:
- * @param access_token - access token generated from "getAuthToken"
- * @param teamNumber - user's team number
- * @param leagueId - the league id
- */
- const getTeamComparisonsAllWeeks = async (req, res, next) => {
-    console.log(`[${new Date()}] Request to /getTeamComparisonAllWeeks`);
-    try {
-        const access_token = req.query.access_token;
-        const teamNumber =  req.query.teamNumber;
-        const leagueId = req.query.leagueId; 
-
-        if (!access_token) {
-            throw new Error('No access_token passed in the query parameters.')
-        } else if (!teamNumber || !leagueId) {
-            throw new Error(`Missing team number, week, or league id in the query parameters.`);
-        }
-
-        yahooService.setAccessToken(access_token);
-
         const result = [];
-        const currentWeek = await yahooService.getCurrentWeek(leagueId);
 
-        for (let week = 1; week <= currentWeek; week++) {
-            console.log(`Fetching week ${week}`);
-            const { weekWinner, oppTeamNumber } = await yahooService.getOpponentTeamNumberAndWeekWinner(leagueId, teamNumber, week);
-            const userTeamInfo = await yahooService.getTeamDetailsPerWeek(leagueId, teamNumber, week);
-            const opponentTeamInfo = await yahooService.getTeamDetailsPerWeek(leagueId, oppTeamNumber, week);
-            const teamComparison = yahooService.compareTeams(userTeamInfo, opponentTeamInfo);
-            teamComparison.unshift(weekWinner);
+        if (week === 'allWeeks') {
+            const currentWeek = await yahooService.getCurrentWeek(leagueId);
+            for (let week = 1; week <= currentWeek; week++) {
+                console.log(`Fetching week ${week}`);
+                const teamComparison = await getTeamComparisonsResult(leagueId, teamNumber, week);
+                result.push(teamComparison);
+            }
+        } else {
+            const teamComparison = await getTeamComparisonsResult(leagueId, teamNumber, week);
             result.push(teamComparison);
-
-            // Try to avoid rate limiting
-            await new Promise(r => setTimeout(r, 3000));
         }
-        
+
         res.status(200).json({
             data: result
         });
@@ -135,8 +89,16 @@ const getTeamComparisonsForWeek = async (req, res, next) => {
     }
 }
 
+const getTeamComparisonsResult = async (leagueId, teamNumber, week) => {
+    const { weekWinnerInfo, oppTeamNumber } = await yahooService.getMatchupInfo(leagueId, teamNumber, week);
+    const userTeamInfo = await yahooService.getTeamDetailsPerWeek(leagueId, teamNumber, week);
+    const opponentTeamInfo = await yahooService.getTeamDetailsPerWeek(leagueId, oppTeamNumber, week);
+    const teamComparison = yahooService.compareTeams(userTeamInfo, opponentTeamInfo);
+    teamComparison.unshift(weekWinnerInfo);
+    return teamComparison;
+}
+
 module.exports = {
     getAuthToken,
-    getTeamComparisonsForWeek,
-    getTeamComparisonsAllWeeks,
+    getTeamComparisons,
 };

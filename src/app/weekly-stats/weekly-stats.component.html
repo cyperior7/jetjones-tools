@@ -1,4 +1,4 @@
-<div class="container" style="max-width: 1400px;">
+<div class="container" style="max-width: 1500px;">
     <h1 id="header">Weekly Stats</h1>
     <hr/>
 
@@ -39,16 +39,6 @@
                         <span class="fas fa-bolt"></span>
                         Generate Yahoo Token
                     </button>
-                    <!--
-                    <div *ngIf="yahooAuthTokenSet" class="authStatus authSet">
-                        <span class="fas fa-check"></span>
-                        Auth Token Set
-                    </div>
-                    <div *ngIf="!yahooAuthTokenSet" class="authStatus authNotSet">
-                        <span class="fas fa-times"></span>
-                        Auth Token Not Set
-                    </div>
-                -->
                 </div>
             </form>
         </div>
@@ -119,7 +109,16 @@
 
     <div *ngIf="displayQueryResults">
         <div *ngFor="let weekResult of queryResults; let indexNumber=index" class="flexContainer weekResult">
-            <div [ngClass]="[weekResult[0] === 'user' ? 'userWinsWeek' : weekResult[0] === 'opponent' ? 'oppWinsWeek' : 'tieInWeek', 'weekNumber']">Week {{weekNumber === ALL_WEEKS ? indexNumber+1 : weekNumber}}</div>
+            <div class="weekNumber">
+                <div [ngClass]="[weekResult[0].weekWinner === 'user' ? 'userWinsWeek' : weekResult[0].weekWinner === 'opponent' ? 'oppWinsWeek' : 'tieInWeek', 'weekNumberTitle']">
+                    Week {{weekNumber === ALL_WEEKS ? indexNumber+1 : weekNumber}}
+                </div>
+                <div>
+                    <span [ngClass]="[weekResult[0].weekWinner === 'user' ? 'higherScore' : '']">{{weekResult[0]['userScore']}}</span>
+                    <span> vs. </span>
+                    <span [ngClass]="[weekResult[0].weekWinner === 'opponent' ? 'higherScore' : '']">{{weekResult[0]['oppScore']}}</span>
+                </div>
+            </div>
             <div *ngFor="let position of weekResult.slice(1)" [ngClass]="[position['winner'] === 'user' ? 'userWinner' : position['winner'] === 'opponent' ? 'oppWinner' : 'tie', 'flexContainer', 'positionBox']">
                 <p class="positionTitle">{{position['position']}}</p>
                 <div>
