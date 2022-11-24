@@ -1,0 +1,226 @@
+.yahooSection {
+    border: 4px;
+    border-style: solid;
+    border-color: rgb(153, 0, 255);
+    border-radius: 5px;
+    background-color: rgba(153, 0, 255, 0.1);
+    width: 500px;
+}
+
+.querySettingsSection {
+    border: 4px;
+    border-style: solid;
+    border-color: navy;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 128, 0.1);
+    width: 825px;
+}
+
+.formSection {
+    margin-top: 10px;
+}
+
+.authStatus {
+    display: inline-block;
+    padding-left: 30px;
+}
+
+.authNotSet {
+    color: red;
+}
+
+.authSet {
+    color: green
+}
+
+.boxTitle {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.choiceMargin {
+    margin-left: 10px;
+}
+
+.choiceLabel {
+    padding-left: 5px;
+}
+
+button {
+    border-width: 4px;
+    border-style: solid;
+    border-color: black;
+    border-radius: 5px;
+    background-color: black;
+    color: white;
+}
+
+button:hover {
+    background-color: white;
+    color: black;
+}
+
+.submitButton {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.regenerateYahoo {
+    border-color: rgb(153, 0, 255);
+    background-color: rgb(153, 0, 255);
+}
+
+.errorBox {
+    border: 4px;
+    border-style: solid;
+    border-color: red;
+    border-radius: 5px;
+    background-color: rgba(255, 0, 0, 0.1);
+    color: red;
+    width: 700px;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+.errorTitle {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.userWinsWeek {
+    color: rgba(3, 126, 13);
+}
+
+.userWinner {
+    background-color: rgba(3, 126, 13, 0.4);
+    border-color: rgba(3, 126, 13);
+}
+
+.oppWinsWeek {
+    color: rgba(223, 1, 1);
+}
+
+.oppWinner {
+    background-color: rgba(223, 1, 1, 0.4);
+    border-color: rgba(223, 1, 1);
+}
+
+.tieInWeek {
+    color: rgba(126, 126, 126)
+}
+
+.tie {
+    background-color: rgba(126, 126, 126, 0.4);
+    border-color: rgba(126, 126, 126);
+}
+
+.weekNumber {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 10px;
+    width: 130px;
+    justify-content: center;
+}
+
+.weekNumberTitle {
+    font-weight: bold;
+    font-size: 30px;
+}
+
+.positionBox {
+    margin-left: 15px;
+    margin-right: 15px;
+    border-width: 4px;
+    border-style: solid;
+    border-radius: 5px;
+    flex-direction: column;
+    padding: 5px;
+    width: 140px;
+}
+
+.positionTitle {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.higherScore {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.weekResult {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+/* Spinner */
+
+.cssload-container {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 9999;
+  }
+  
+  .cssload-speeding-wheel {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 48%;
+    top: 40%;
+    width: 63px;
+    height: 63px;
+    margin: 0 auto;
+    border: 4px solid rgb(0, 0, 0);
+    border-radius: 50%;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    animation: cssload-spin 500ms infinite linear;
+    -o-animation: cssload-spin 500ms infinite linear;
+    -ms-animation: cssload-spin 500ms infinite linear;
+    -webkit-animation: cssload-spin 500ms infinite linear;
+    -moz-animation: cssload-spin 500ms infinite linear;
+  }
+  
+  @keyframes cssload-spin {
+    100% {
+      transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+  
+  @-o-keyframes cssload-spin {
+    100% {
+      -o-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+  
+  @-ms-keyframes cssload-spin {
+    100% {
+      -ms-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+  
+  @-webkit-keyframes cssload-spin {
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+  
+  @-moz-keyframes cssload-spin {
+    100% {
+      -moz-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+
+/* End Spinner */
