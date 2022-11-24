@@ -13,13 +13,27 @@ const setAccessToken = access_token => {
     ACCESS_TOKEN_HOLDER.access_token = access_token;
 }
 
+const POSITIONS = {
+    QB: 'QB',
+    WR: 'WR',
+    RB: 'RB',
+    TE: 'TE',
+    K: 'K',
+    DEF: 'DEF',
+    'DEF+K': 'DEF+K'
+};
+
+const OPP = 'opponent';
+const USER = 'user';
+const TIE = 'tie';
+
 /**
  * @param {*} leagueId 
  * @param {*} teamNumber 
  * @param {*} week 
- * @returns the opponent's team number on the given week
+ * @returns {object} { weekWinner: user/opponent, oppTeamNumber: opponent team number }
  */
-const getOpponentTeamNumber = async (leagueId, teamNumber, week) => {
+const getOpponentTeamNumberAndWeekWinner = async (leagueId, teamNumber, week) => {
     const url = `https://fantasysports.yahooapis.com/fantasy/v2/league/${NFL_ID}.${leagueId}/scoreboard?week=${week}`
     const options = {
         url,
@@ -34,11 +48,40 @@ const getOpponentTeamNumber = async (leagueId, teamNumber, week) => {
         const teams = matchup['teams']['team'];
         const teamId1 = teams[0]['team_id']['_text'];
         const teamId2 = teams[1]['team_id']['_text'];
-        if (teamId1 === teamNumber) return teamId2;
-        if (teamId2 === teamNumber) return teamId1;
+        if (teamId1 === teamNumber) {
+            const weekWinner = matchup['winner_team_key']
+                ? matchup['winner_team_key']['_text'].split('.')[4] === teamNumber ? USER : OPP
+                : TIE;
+            return {
+                oppTeamNumber: teamId2,
+                weekWinner
+            };
+        } else if (teamId2 === teamNumber) {
+            const weekWinner = matchup['winner_team_key']
+                ? matchup['winner_team_key']['_text'].split('.')[4] === teamNumber ? USER : OPP
+                : TIE;
+            return {
+                oppTeamNumber: teamId1,
+                weekWinner
+            };
+        }
     }
     
     throw new Error(`Please make sure requested team number ${teamNumber} is valid`);
+}
+
+const getCurrentWeek = async (leagueId) => {
+    const url = `https://fantasysports.yahooapis.com/fantasy/v2/league/${NFL_ID}.${leagueId}`;
+    const options = {
+        url,
+        method: 'get',
+        headers: { Authorization: `Bearer ${getAccessToken()}` }
+    }
+    const result = await axios(options);
+    const resultJson = JSON.parse(convert.xml2json(result.data, {compact: true, spaces: 4}));
+
+    const currentWeek = parseInt(resultJson['fantasy_content']['league']['current_week']['_text']);
+    return currentWeek;
 }
 
 const getTeamDetailsPerWeek = async (leagueId, teamNumber, week) => {
@@ -57,35 +100,7 @@ const getTeamDetailsPerWeek = async (leagueId, teamNumber, week) => {
 }
 
 const calculatePositionAverages = async (playerList, leagueId) => {
-    const positionAverages = {
-        QB: {
-            score: 0,
-            count: 0
-        },
-        WR: {
-            score: 0,
-            count: 0
-        },
-        RB: {
-            score: 0,
-            count: 0
-        },
-        TE: {
-            score: 0,
-            count: 0
-        },
-        K: {
-            score: 0,
-            count: 0
-        },
-        DEF: {
-            score: 0,
-            count: 0
-        },
-        'DEF+K': {
-            score: 0,
-        }
-    };
+    const positionAverages = {};
 
     for (const player of playerList) {
         const startingStatus = player['selected_position']['position']['_text'];
@@ -95,15 +110,23 @@ const calculatePositionAverages = async (playerList, leagueId) => {
         const position = player['primary_position']['_text'];
         const week = player['selected_position']['week']['_text'];
         const playerScore = await getPlayerScorePerWeek(leagueId, player['player_key']['_text'], week);
-        positionAverages[position].score += playerScore;
-        positionAverages[position].count += 1;
+
+        if (positionAverages[position]) {
+            positionAverages[position].score += playerScore;
+            positionAverages[position].count += 1;
+        } else {
+            positionAverages[position] = {
+                score: playerScore,
+                count: 1
+            };
+        }
     }
 
     for (const position in positionAverages) {
         positionAverages[position] = positionAverages[position].score / positionAverages[position].count;
     }
 
-    positionAverages['DEF+K'] = positionAverages['K'] + positionAverages['DEF'];
+    positionAverages[POSITIONS['DEF+K']] = positionAverages[POSITIONS.K] + positionAverages[POSITIONS.DEF];
 
     return positionAverages;
 }
@@ -123,32 +146,32 @@ const getPlayerScorePerWeek = async (leagueId, playerId, week) => {
 }
 
 const compareTeams = (userTeam, oppTeam) => {
-    const OPP = 'opponent';
-    const USER = 'user';
-    const TIE = 'tie';
-    const result = {};
+    const result = [];
+    const positionOrder = [POSITIONS.QB, POSITIONS.WR, POSITIONS.RB, POSITIONS.TE, POSITIONS.K, POSITIONS.DEF, POSITIONS['DEF+K']];
 
-    for (const position in userTeam) {
+    for (const position of positionOrder) {
         const userValue = userTeam[position];
         const oppValue = oppTeam[position];
-        const winner = userValue > oppValue
-            ? USER
-            : oppValue > userValue
-                ? OPP
-                : TIE;
-        result[position] = {
-            winner,
-            userScore: (userValue).toFixed(2),
-            oppScore: (oppValue).toFixed(2)
+        const obj = {
+            position,
+            userScore: userValue.toFixed(2),
+            oppScore: oppValue.toFixed(2),
+            winner: userValue > oppValue
+                ? USER
+                : oppValue > userValue
+                    ? OPP
+                    : TIE
         };
+        result.push(obj);
     }
-    
+
     return result;
 }
 
 module.exports = {
     setAccessToken,
-    getOpponentTeamNumber,
+    getOpponentTeamNumberAndWeekWinner,
     getTeamDetailsPerWeek,
     compareTeams,
+    getCurrentWeek,
 };

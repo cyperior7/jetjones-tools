@@ -15,6 +15,7 @@ const server = app.listen(8080, function () {
 
 app.get("/getAuthToken/:code", jetJonesToolsController.getAuthToken);
 app.get("/getTeamComparisonForWeek", jetJonesToolsController.getTeamComparisonsForWeek);
+app.get("/getTeamComparisonAllWeeks", jetJonesToolsController.getTeamComparisonsAllWeeks);
 
 app.get('/', function (req, res) {
   res.send('Hello World')

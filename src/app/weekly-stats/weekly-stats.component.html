@@ -1,6 +1,10 @@
-<div class="container">
+<div class="container" style="max-width: 1400px;">
     <h1 id="header">Weekly Stats</h1>
     <hr/>
+
+    <div *ngIf="isLoading" class="cssload-container">
+        <div class="cssload-speeding-wheel"></div>
+    </div>
 
     <div *ngIf="displayError" class="flexContainer" style="margin-bottom: 20px;">
         <div class="errorBox">
@@ -13,7 +17,7 @@
         <br/>
     </div>
 
-    <div class="flexContainer">
+    <div *ngIf="displayYahooSection" class="flexContainer">
         <div class="yahooSection">
             <div class="formSection">
                 <span class="boxTitle">Yahoo Auth Token</span>
@@ -35,6 +39,7 @@
                         <span class="fas fa-bolt"></span>
                         Generate Yahoo Token
                     </button>
+                    <!--
                     <div *ngIf="yahooAuthTokenSet" class="authStatus authSet">
                         <span class="fas fa-check"></span>
                         Auth Token Set
@@ -43,14 +48,21 @@
                         <span class="fas fa-times"></span>
                         Auth Token Not Set
                     </div>
+                -->
                 </div>
             </form>
         </div>
     </div>
 
-    <br/>
+    <button *ngIf="!displayYahooSection" (click)="regenerateYahooAuthToken()" type="button" class="submitButton regenerateYahoo">
+        <span class="fas fa-redo-alt"></span>
+        Regenerate Yahoo Auth Token
+    </button>
 
-    <div class="flexContainer">
+    <br *ngIf="!displayYahooSection"/>
+    <br *ngIf="displayYahooSection"/>
+
+    <div *ngIf="!displayQueryResults" class="flexContainer">
         <div class="querySettingsSection">
             <div class="formSection">
                 <span class="boxTitle">Query Settings</span>
@@ -95,8 +107,27 @@
         </div>
     </div>
 
-    <button (click)="getWeekResults()" id="submitQuery" type="button" class="submitButton">
+    <button *ngIf="!displayQueryResults" (click)="getWeekResults()" id="submitQuery" type="button" class="submitButton">
         <span class="fas fa-check"></span>
         Submit Query
     </button>
+
+    <button *ngIf="displayQueryResults" (click)="resubmitQuery()" type="button" class="submitButton">
+        <span class="fas fa-redo-alt"></span>
+        Re-Submit Query
+    </button>
+
+    <div *ngIf="displayQueryResults">
+        <div *ngFor="let weekResult of queryResults; let indexNumber=index" class="flexContainer weekResult">
+            <div [ngClass]="[weekResult[0] === 'user' ? 'userWinsWeek' : weekResult[0] === 'opponent' ? 'oppWinsWeek' : 'tieInWeek', 'weekNumber']">Week {{weekNumber === ALL_WEEKS ? indexNumber+1 : weekNumber}}</div>
+            <div *ngFor="let position of weekResult.slice(1)" [ngClass]="[position['winner'] === 'user' ? 'userWinner' : position['winner'] === 'opponent' ? 'oppWinner' : 'tie', 'flexContainer', 'positionBox']">
+                <p class="positionTitle">{{position['position']}}</p>
+                <div>
+                    <span [ngClass]="[position['winner'] === 'user' ? 'higherScore' : '']">{{position['userScore']}}</span>
+                    <span> vs. </span>
+                    <span [ngClass]="[position['winner'] === 'opponent' ? 'higherScore' : '']">{{position['oppScore']}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

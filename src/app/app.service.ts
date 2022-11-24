@@ -20,6 +20,11 @@ export class AppService {
     return(this.http.get(url));
   }
 
+  getTeamComparisonAllWeeks(leagueId, teamNumber) {
+    const url = `${LOCAL_HOST}/getTeamComparisonAllWeeks?access_token=${this.getConfig('access_token')}&leagueId=${leagueId}&teamNumber=${teamNumber}`;
+    return(this.http.get(url));
+  }
+
   setConfig(key, value) {
     config[key] = value;
   }
