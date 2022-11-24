@@ -52,6 +52,7 @@ export class WeeklyStatsComponent implements OnInit {
 
     this.appService.getToken(code).subscribe(data => {
       this.appService.setConfig('access_token', data['access_token']);
+      console.log(data['access_token']);
       this.yahooAuthTokenSet = true;
       this.displayYahooSection = false;
       this.cd.detectChanges();
