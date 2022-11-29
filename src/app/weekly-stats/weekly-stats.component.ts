@@ -19,6 +19,7 @@ export class WeeklyStatsComponent implements OnInit {
   errorObj;
   displayError: boolean;
   queryResults: object[];
+  percentWonResults: object[];
   displayQueryResults: boolean;
   isLoading: boolean;
 
@@ -110,9 +111,44 @@ export class WeeklyStatsComponent implements OnInit {
   }
 
   handleResponse(response): void {
+    this.percentWonResults = [];
+    if (this.weekNumber === this.ALL_WEEKS) {
+      this.setPercentResults(response['data']);
+    }
     this.queryResults = response['data'];
     this.displayQueryResults = true;
     this.isLoading = false;
+  }
+
+  setPercentResults(data): void {
+    const positionIndex = {
+      'QB': 0,
+      'WR': 1,
+      'RB': 2,
+      'TE': 3,
+      'K': 4,
+      'DEF': 5,
+      'DEF+K': 6
+    };
+    // Placeholders
+    const numWinsList = [0, 0, 0, 0, 0, 0, 0];
+
+    for (const weekData of data) {
+      for (const position of weekData.slice(1)) {
+        console.log(position);
+        if (position['winner'] === 'user') {
+          numWinsList[positionIndex[position['position']]] += 1;
+        }
+      }
+    }
+
+    const result = [];
+    for (let i = 0; i < numWinsList.length; i++) {
+      const percent = numWinsList[i] / data.length * 100;
+      result.push(`${Math.floor(percent)}%`);
+    }
+
+    this.percentWonResults = result;
   }
 
   resubmitQuery(): void {
