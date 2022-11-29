@@ -108,6 +108,15 @@
     </button>
 
     <div *ngIf="displayQueryResults">
+        <div *ngIf="percentWonResults.length !== 0" class="flexContainer weekResult">
+            <div class="weekNumber percentTitle">
+                % Weeks Won
+            </div>
+            <div *ngFor="let positionResult of percentWonResults" class="percentBox percentTitle">
+                {{positionResult}}
+            </div>
+        </div>
+
         <div *ngFor="let weekResult of queryResults; let indexNumber=index" class="flexContainer weekResult">
             <div class="weekNumber">
                 <div [ngClass]="[weekResult[0].weekWinner === 'user' ? 'userWinsWeek' : weekResult[0].weekWinner === 'opponent' ? 'oppWinsWeek' : 'tieInWeek', 'weekNumberTitle']">
