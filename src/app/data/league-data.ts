@@ -1,18 +1,18 @@
 export const leagueInformation = {
     WorldyEgwugwus: {
-        leagueId: '915675',
+        leagueId: '210043',
         teamNumber: '1'
     },
     Cyperior: {
-        leagueId: '1028781',
-        teamNumber: '6'
+        leagueId: '1069562',
+        teamNumber: '1'
     },
     YellowGang: {
-        leagueId: '1236113',
-        teamNumber: '4'
+        leagueId: '1061316',
+        teamNumber: '9'
     },
     KappaLord: {
-        leagueId: '1237648',
-        teamNumber: '9'
+        leagueId: '986716',
+        teamNumber: '7'
     },
 };
