@@ -60,6 +60,16 @@ button:hover {
     color: black;
 }
 
+.disableButton {
+    color: black;
+    background-color: gray;
+}
+
+.disableButton:hover {
+    background-color: gray;
+    cursor: not-allowed;
+}
+
 .submitButton {
     margin-top: 20px;
     margin-bottom: 20px;
