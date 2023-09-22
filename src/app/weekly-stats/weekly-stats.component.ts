@@ -10,6 +10,7 @@ import { leagueInformation } from '../data/league-data';
 export class WeeklyStatsComponent implements OnInit {
 
   yahooAuthTokenSet: boolean;
+  yahooCode = '';
   displayYahooSection: boolean;
   leagueId: string;
   leagueName: string;

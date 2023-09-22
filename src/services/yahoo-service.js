@@ -173,8 +173,8 @@ const compareTeams = (userTeam, oppTeam) => {
     const positionOrder = [POSITIONS.QB, POSITIONS.WR, POSITIONS.RB, POSITIONS.TE, POSITIONS.K, POSITIONS.DEF, POSITIONS['DEF+K']];
 
     for (const position of positionOrder) {
-        const userValue = userTeam[position];
-        const oppValue = oppTeam[position];
+        const userValue = userTeam[position] || 0;
+        const oppValue = oppTeam[position] || 0;
         const obj = {
             position,
             userScore: userValue.toFixed(2),

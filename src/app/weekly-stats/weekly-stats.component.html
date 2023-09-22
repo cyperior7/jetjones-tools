@@ -32,10 +32,10 @@
                 </div>
                 <div class="formSection">
                     <label style="padding-right: 5px;">Enter Yahoo Code</label> 
-                    <input type="text" id="yahooCode"/>
+                    <input type="text" id="yahooCode" [(ngModel)]="yahooCode"/>
                 </div>
                 <div class="formSection">
-                    <button (click)="getYahooToken()" type="button">
+                    <button [ngClass]="[yahooCode === '' ? 'disableButton' : '']" (click)="getYahooToken()" type="button" [disabled]="yahooCode === ''">
                         <span class="fas fa-bolt"></span>
                         Generate Yahoo Token
                     </button>
